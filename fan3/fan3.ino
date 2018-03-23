@@ -1,0 +1,53 @@
+#include <DHT.h>
+
+float temp;
+
+int tempPin = 2; //arduino pin used for temperature sensor
+
+int tempMin = 25; // the temperature to start the buzzer
+
+int tempMax = 70;
+
+int fan = 6; // the pin where fan is connected
+
+int fanSpeed = 0;
+
+void setup() {
+
+pinMode(fan, OUTPUT);
+
+pinMode(tempPin, INPUT);
+
+Serial.begin(9600);
+
+}
+
+void loop() {
+
+temp = analogRead(tempPin);
+
+//temp = (temp *5.0*100.0)/1024.0; //calculate the temperature in Celsius
+
+Serial.println(temp);
+
+delay(1000); // delay in between reads for stability
+
+if(temp < tempMin) { // if temp is lower than minimum temp
+
+fanSpeed =1 ; // fan is not spinning
+
+digitalWrite(fan, HIGH);
+
+}
+
+if((temp >= tempMin) && (temp <= tempMax)) //if temperature is higher than the minimum range
+
+{
+
+fanSpeed = map(temp, tempMin, tempMax, 32, 255); // the actual speed of fan
+
+analogWrite(fan, fanSpeed); // spin the fan at the fanSpeed speed
+
+}
+
+}
